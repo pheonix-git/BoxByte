@@ -1,0 +1,461 @@
+@font-face {
+    font-family: 'Electrolize';
+    src: url('fonts/Electrolize-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* Optional: improves loading behavior */
+}
+
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Electrolize', 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    text-align: center;
+    position: relative; /* For positioning pseudo-elements */
+    overflow: hidden;   /* To contain pseudo-elements */
+}
+
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    background-color: #ffffff;
+    opacity: 0.03; /* Very faint to not distract */
+    z-index: 0; /* Behind the game container */
+}
+
+body::before {
+    width: 50vmax;
+    height: 50vmax;
+    top: -15vmax;
+    right: -15vmax;
+    transform: rotate(45deg);
+}
+
+body::after {
+    width: 60vmax;
+    height: 60vmax;
+    bottom: -20vmax;
+    left: -20vmax;
+    transform: rotate(25deg);
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+    z-index: 1; /* To ensure it's above the background polygons */
+    border: 3px solid #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #000000;
+    /* New styles for portrait layout */
+    width: 90vw; /* Take up 90% of viewport width */
+    max-width: 400px; /* Max width for larger screens */
+    height: 95vh; /* Take up most of the viewport height */
+    max-height: 800px; /* Max height */
+    justify-content: space-between; /* Distribute space */
+}
+
+.title-container h1 {
+    margin: 0 0 5px 0;
+    font-size: 2.5em;
+    letter-spacing: 4px;
+}
+
+.title-container .subtitle {
+    margin: -5px 0 0 0;
+    font-size: 0.9em;
+    color: #ffffff;
+    letter-spacing: 2px;
+}
+
+.title-container .subtitle::after {
+    content: '(By : MONOCHROME MASTER)';
+    display: block; /* Puts it on a new line */
+    font-size: 0.7em; /* Make it smaller than the subtitle */
+    font-weight: normal;
+    opacity: 0.6; /* Make it a bit faded */
+    margin-top: 8px; /* Add some space below the subtitle */
+    letter-spacing: 1px; /* Adjust letter spacing to match style */
+}
+
+.ui-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1em;
+    color: #ffffff;
+}
+
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background-color: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 6px;
+    transition: width 0.2s ease-in-out;
+}
+
+#gameCanvas {
+    background-color: #000000;
+    border: 3px solid #ffffff;
+    border-radius: 6px;
+    /* New styles for responsive canvas */
+    width: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+.controls-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    font-family: 'Electrolize', 'Courier New', Courier, monospace;
+    font-size: 1em;
+    padding: 8px 18px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+button:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+button:active {
+    background-color: #cccccc;
+    color: #000000;
+}
+
+button:disabled {
+    background-color: #000000;
+    color: #555;
+    border-color: #555;
+    cursor: not-allowed;
+}
+
+.overlay {
+    position: absolute;
+    top: 0; /* Cover the entire container */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    font-size: 3em;
+    color: #ffffff;
+    letter-spacing: 4px;
+    backdrop-filter: blur(2px); /* A modern blur effect */
+    border-radius: 10px;
+}
+
+.deco-text {
+    position: absolute;
+    font-size: 0.5em;
+    color: #ffffff;
+    opacity: 0.08;
+    letter-spacing: 4px;
+    user-select: none; /* Make it non-selectable */
+    pointer-events: none; /* Make it non-interactive */
+    font-weight: normal;
+}
+
+.deco-text-1 {
+    top: 20%;
+    left: 10%;
+    transform: rotate(-15deg);
+}
+
+.deco-text-2 {
+    bottom: 20%;
+    right: 10%;
+    transform: rotate(10deg);
+}
+
+.deco-shape {
+    position: absolute;
+    opacity: 0.08;
+    pointer-events: none;
+    user-select: none;
+}
+
+.deco-shape-1 {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    top: 15%;
+    right: 15%;
+    transform: rotate(-25deg);
+}
+
+.deco-shape-2 {
+    width: 50px;
+    height: 50px;
+    bottom: 15%;
+    left: 15%;
+    transform: rotate(20deg);
+}
+.deco-shape-2::before,
+.deco-shape-2::after {
+    content: '';
+    position: absolute;
+    background-color: #ffffff;
+}
+.deco-shape-2::before { /* vertical bar */
+    width: 2px;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.deco-shape-2::after { /* horizontal bar */
+    width: 100%;
+    height: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.start-screen-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+
+.skins-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.skins-section h3 {
+    margin: 0;
+    font-size: 0.5em;
+    letter-spacing: 3px;
+    font-weight: normal;
+}
+
+.skin-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.skin-button {
+    font-size: 1.5em;
+    background-color: #ffffff;
+    border: 2px solid #ffffff;
+    color: #000000;
+    padding: 5px 10px;
+    line-height: 1;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.skin-button:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.skin-button.selected {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.color-button {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    border: 2px solid #555;
+    border-radius: 50%; /* Make them circles */
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.color-button:hover {
+    transform: scale(1.15);
+    border-color: #ffffff;
+}
+
+.color-button.selected {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px #ffffff;
+}
+
+.overlay .final-score {
+    font-size: 0.6em;
+    letter-spacing: 2px;
+    color: #ffffff;
+}
+
+.overlay-controls {
+    display: flex;
+    gap: 20px;
+}
+
+.overlay button {
+    font-family: 'Electrolize', 'Courier New', Courier, monospace;
+    font-size: 0.4em;
+    padding: 10px 25px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.overlay button:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* New styles for mobile controls */
+.mobile-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 25px; /* More breathing room at the bottom */
+    width: 100%;
+    padding-left: 25px;  /* More space on the left */
+    padding-right: 25px; /* More space on the right */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.d-pad-left-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.d-pad-right-group {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.dpad-button {
+    font-family: 'Electrolize', 'Courier New', Courier, monospace;
+    font-size: 1.5em;
+    width: 50px;
+    height: 50px;
+    background-color: #222;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.dpad-button:active {
+    background-color: #fff;
+    color: #000;
+}
+
+/* --- Landscape PSP-like Layout for Mobile --- */
+@media (orientation: landscape) and (max-height: 550px) {
+    .game-container {
+        /* Change to a 3-column grid for the PSP layout */
+        display: grid;
+        grid-template-columns: 1fr auto 1fr; /* Left Controls | Game Area | Right Controls */
+        grid-template-rows: 1fr auto;        /* Canvas | UI Panel below canvas */
+        gap: 0 20px; /* No row gap, 20px column gap */
+        
+        /* Adjust container size for landscape */
+        width: 98vw;
+        height: 98vh;
+        max-width: 1000px;
+        max-height: 500px;
+        padding: 10px;
+
+        /* Override portrait flex settings */
+        flex-direction: initial;
+        justify-content: initial;
+    }
+
+    /* Hide the main title in landscape mode as it doesn't fit the layout */
+    .title-container {
+        display: none;
+    }
+
+    /* Place the game canvas in the center column, top row */
+    #gameCanvas {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        height: 100%; /* Fill the available height in its grid area */
+        width: auto;  /* Let aspect-ratio control the width */
+        align-self: end; /* Align to the bottom of its grid area */
+    }
+
+    /* Place the UI panel below the canvas in the center column */
+    .ui-panel {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+        padding-top: 10px; /* Add some space above the score */
+        align-items: center; /* Center the score/progress bar horizontally */
+    }
+
+    /* Stretch the mobile controls container across all columns */
+    .mobile-controls {
+        grid-column: 1 / -1; /* Span all three columns */
+        grid-row: 1 / 2;     /* Align with the canvas row */
+        
+        /* Override portrait padding and align controls vertically */
+        padding: 0;
+        align-items: center; /* Center the d-pads vertically */
+        height: 100%; /* Take full height of the row */
+    }
+
+    /* Center the d-pad groups within their respective grid areas */
+    .d-pad-left-group, .d-pad-right-group {
+        align-items: center;     /* Align buttons on their cross-axis */
+        justify-content: center; /* Center buttons on their main-axis */
+        height: 100%;            /* Allow vertical centering within the row */
+    }
+
+    /* Make the d-pad buttons slightly larger for landscape */
+    .dpad-button {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8em;
+    }
+}
+
+    
