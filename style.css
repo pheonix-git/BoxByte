@@ -18,6 +18,8 @@ body {
     text-align: center;
     position: relative; /* For positioning pseudo-elements */
     overflow: hidden;   /* To contain pseudo-elements */
+    /* Prevent text selection, which is not needed for a game */
+    user-select: none;
 }
 
 body::before,
@@ -51,7 +53,6 @@ body::after {
     gap: 15px;
     position: relative;
     z-index: 1; /* To ensure it's above the background polygons */
-    border: 3px solid #ffffff;
     padding: 20px;
     border-radius: 12px;
     background-color: #000000;
@@ -119,7 +120,7 @@ body::after {
 
 #gameCanvas {
     background-color: #000000;
-    border: 3px solid #ffffff;
+    border: 2px solid #ffffff;
     border-radius: 6px;
     /* New styles for responsive canvas */
     width: 100%;
@@ -389,73 +390,23 @@ button:disabled {
     color: #000;
 }
 
-/* --- Landscape PSP-like Layout for Mobile --- */
+/* --- Landscape Layout Correction --- */
+/* This block prevents the layout from breaking on wide, short screens (landscape mobile) */
 @media (orientation: landscape) and (max-height: 550px) {
     .game-container {
-        /* Change to a 3-column grid for the PSP layout */
-        display: grid;
-        grid-template-columns: 1fr auto 1fr; /* Left Controls | Game Area | Right Controls */
-        grid-template-rows: 1fr auto;        /* Canvas | UI Panel below canvas */
-        gap: 0 20px; /* No row gap, 20px column gap */
-        
-        /* Adjust container size for landscape */
-        width: 98vw;
-        height: 98vh;
-        max-width: 1000px;
-        max-height: 500px;
-        padding: 10px;
-
-        /* Override portrait flex settings */
-        flex-direction: initial;
-        justify-content: initial;
+        /* Center the content vertically now that it will be smaller overall */
+        justify-content: center;
     }
 
-    /* Hide the main title in landscape mode as it doesn't fit the layout */
-    .title-container {
-        display: none;
-    }
-
-    /* Place the game canvas in the center column, top row */
     #gameCanvas {
-        grid-column: 2 / 3;
-        grid-row: 1 / 2;
-        height: 100%; /* Fill the available height in its grid area */
-        width: auto;  /* Let aspect-ratio control the width */
-        align-self: end; /* Align to the bottom of its grid area */
+        /* The canvas was overflowing the container's height. */
+        /* We limit its height, and `aspect-ratio` will shrink the width to match. */
+        max-height: 45vh;
     }
 
-    /* Place the UI panel below the canvas in the center column */
-    .ui-panel {
-        grid-column: 2 / 3;
-        grid-row: 2 / 3;
-        padding-top: 10px; /* Add some space above the score */
-        align-items: center; /* Center the score/progress bar horizontally */
-    }
-
-    /* Stretch the mobile controls container across all columns */
     .mobile-controls {
-        grid-column: 1 / -1; /* Span all three columns */
-        grid-row: 1 / 2;     /* Align with the canvas row */
-        
-        /* Override portrait padding and align controls vertically */
-        padding: 0;
-        align-items: center; /* Center the d-pads vertically */
-        height: 100%; /* Take full height of the row */
-    }
-
-    /* Center the d-pad groups within their respective grid areas */
-    .d-pad-left-group, .d-pad-right-group {
-        align-items: center;     /* Align buttons on their cross-axis */
-        justify-content: center; /* Center buttons on their main-axis */
-        height: 100%;            /* Allow vertical centering within the row */
-    }
-
-    /* Make the d-pad buttons slightly larger for landscape */
-    .dpad-button {
-        width: 60px;
-        height: 60px;
-        font-size: 1.8em;
+        /* Reduce padding to save precious vertical space */
+        padding-top: 5px;
+        padding-bottom: 10px;
     }
 }
-
-    
