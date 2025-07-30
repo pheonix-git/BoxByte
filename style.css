@@ -56,12 +56,13 @@ body::after {
     padding: 20px;
     border-radius: 12px;
     background-color: #000000;
-    /* New styles for portrait layout */
-    width: 90vw; /* Take up 90% of viewport width */
-    max-width: 400px; /* Max width for larger screens */
-    height: 95vh; /* Take up most of the viewport height */
-    max-height: 800px; /* Max height */
-    justify-content: space-between; /* Distribute space */
+    /* Flexible and responsive container sizing */
+    width: 100%;
+    height: 100%;
+    max-width: 420px; /* Ideal max-width for portrait phones */
+    max-height: 900px;
+    justify-content: center; /* Center content vertically */
+    box-sizing: border-box;
 }
 
 .title-container h1 {
@@ -347,13 +348,12 @@ button:disabled {
 /* New styles for mobile controls */
 .mobile-controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Center the control groups */
+    gap: 80px; /* Add space between the left and right groups */
     align-items: center;
-    padding-top: 15px;
-    padding-bottom: 25px; /* More breathing room at the bottom */
+    padding-top: 15px; /* Keep top padding as is */
+    padding-bottom: 30px; /* Increased bottom padding */
     width: 100%;
-    padding-left: 25px;  /* More space on the left */
-    padding-right: 25px; /* More space on the right */
     box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
@@ -390,23 +390,43 @@ button:disabled {
     color: #000;
 }
 
-/* --- Landscape Layout Correction --- */
-/* This block prevents the layout from breaking on wide, short screens (landscape mobile) */
-@media (orientation: landscape) and (max-height: 550px) {
+/* --- Fully Responsive Layout for Landscape & Tablets --- */
+/* This block creates a new two-column layout for wide screens to optimize space. */
+/* It targets landscape phones and both orientations of tablets. */
+@media (orientation: landscape) and (max-height: 600px), (min-width: 601px) and (max-width: 1024px) {
     .game-container {
-        /* Center the content vertically now that it will be smaller overall */
-        justify-content: center;
+        /* Switch to a two-column grid layout */
+        display: grid;
+        grid-template-columns: 1fr auto; /* Game on left, info/controls on right */
+        grid-template-rows: auto auto 1fr; /* Define rows for right column content */
+        grid-template-areas:
+            "canvas title"
+            "canvas ui"
+            "canvas controls";
+        align-items: center;
+        gap: 10px 30px; /* Row and column gap */
+        max-width: 1000px; /* Allow container to be wider */
+        max-height: 500px;
+        padding: 15px;
     }
 
+    .title-container { grid-area: title; }
+    .ui-panel { grid-area: ui; }
+
     #gameCanvas {
-        /* The canvas was overflowing the container's height. */
-        /* We limit its height, and `aspect-ratio` will shrink the width to match. */
-        max-height: 45vh;
+        grid-area: canvas;
+        max-height: 100%; /* Ensure it fits vertically within the grid area */
+        width: auto; /* Let aspect-ratio and height control the size */
     }
 
     .mobile-controls {
-        /* Reduce padding to save precious vertical space */
-        padding-top: 5px;
-        padding-bottom: 10px;
+        grid-area: controls;
+        /* Stack controls vertically in the right column */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 0;
+        width: auto;
     }
 }
