@@ -4,7 +4,7 @@ This is a complete, offline-ready snake game built with HTML, CSS, and JavaScrip
 
 ## Features
 
-- **Offline First:** No internet connection required. All assets are included locally.
+
 - **Monochromatic Design:** A clean, dark-gray/black theme for a retro feel.
 - **Custom Snake Graphics:** Arrow-shaped head and chevron-shaped tail drawn on the canvas.
 - **Persistent High Score:** Your best score is saved in your browser's local storage.
